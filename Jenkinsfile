@@ -23,8 +23,7 @@ pipeline {
         stage('Run Unit Tests') {
             steps {
                 bat '''
-                venv\\Scripts\\activate
-                pytest
+                venv\\Scripts\\python.exe -m pytest
                 '''
             }
         }
