@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        VENV = "venv"
-        DEPLOY_DIR = "/tmp/flask_deployment"
-    }
-
     stages {
 
         stage('Clone Repository') {
@@ -16,9 +11,9 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh '''
-                python3 -m venv $VENV
-                . $VENV/bin/activate
+                bat '''
+                python -m venv venv
+                venv\\Scripts\\activate
                 pip install --upgrade pip
                 pip install -r requirements.txt
                 '''
@@ -27,8 +22,8 @@ pipeline {
 
         stage('Run Unit Tests') {
             steps {
-                sh '''
-                . $VENV/bin/activate
+                bat '''
+                venv\\Scripts\\activate
                 pytest
                 '''
             }
@@ -36,19 +31,19 @@ pipeline {
 
         stage('Build Application') {
             steps {
-                sh '''
-                mkdir -p build
-                cp app.py requirements.txt build/
+                bat '''
+                mkdir build
+                copy app.py build\\
+                copy requirements.txt build\\
                 '''
             }
         }
 
         stage('Deploy Application') {
             steps {
-                sh '''
-                mkdir -p $DEPLOY_DIR
-                cp -r build/* $DEPLOY_DIR
-                echo "Application deployed to $DEPLOY_DIR"
+                bat '''
+                mkdir C:\\flask_deployment
+                xcopy build\\* C:\\flask_deployment\\ /E /Y
                 '''
             }
         }
@@ -56,7 +51,7 @@ pipeline {
 
     post {
         success {
-            echo 'CI/CD Pipeline executed successfully'
+            echo 'Pipeline executed successfully'
         }
         failure {
             echo 'Pipeline failed'
