@@ -13,12 +13,12 @@ pipeline {
             steps {
                 bat '''
                 python -m venv venv
-                venv\\Scripts\\activate
-                pip install --upgrade pip
-                pip install -r requirements.txt
+                venv\\Scripts\\python.exe -m pip install --upgrade pip
+                venv\\Scripts\\python.exe -m pip install -r requirements.txt
+                venv\\Scripts\\python.exe -m pip install pytest
                 '''
             }
-        }
+        }   
 
         stage('Run Unit Tests') {
             steps {
